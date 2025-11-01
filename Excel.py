@@ -6,9 +6,10 @@ tabela= pd.read_csv('produtos_estados_valores.csv')
 st.title('Analise de Vendas por Estado')
 st.subheader('Visão Geral dos Dados')
 
+st.sidebar.subheader('Filtrar por Produtos')
 
 #filtro de regiao
-regiao = st.multiselect( 'Selecione a Região',tabela['Estado'].unique())
+regiao = st.sidebar.multiselect( 'Selecione a Região',tabela['Estado'].unique())
 
 #se for filtrado, aqui ele junta todas as regioes como uma só
 if regiao:
@@ -30,5 +31,13 @@ st.bar_chart(tabela.groupby('Estado')['Valor'].sum())
 
 st.subheader('Vendas por Produto')
 
-#grafico bonito que n sei o nome
+st.sidebar.subheader('Valor por Produto')
+
+#grafico bonito
 st.bar_chart(tabela.groupby('Produto')['Valor'].sum())
+
+
+valor= st.sidebar.slider('Selecione o valor máximo para filtro',0,10000,5000)
+st.sidebar.write(f'Produtos com valor até R$ {valor}')
+filtro_valor = tabela.loc[tabela['Valor'] <= valor]
+st.sidebar.dataframe(filtro_valor)
